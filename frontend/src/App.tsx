@@ -56,7 +56,7 @@ const App: React.FC = () => {
     }
   };
 
-  const onSelectCategory = async (categoryId: bigint) => {
+  const onSelectCategory = async (categoryId: bigint | null) => {
     setSelectedCategory(categoryId);
     if (categoryId !== null) {
       const categoryNotes = await backend.getNotesByCategory(categoryId);
@@ -70,7 +70,7 @@ const App: React.FC = () => {
     <Container maxWidth="lg">
       <Box sx={{ flexGrow: 1, mt: 4 }}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3}>
             <Paper elevation={3} sx={{ p: 2 }}>
               <Typography variant="h6" gutterBottom>
                 Categories
@@ -98,6 +98,13 @@ const App: React.FC = () => {
                 </Button>
               </form>
               <List>
+                <ListItem
+                  button
+                  selected={selectedCategory === null}
+                  onClick={() => onSelectCategory(null)}
+                >
+                  <ListItemText primary="All Categories" />
+                </ListItem>
                 {categories.map((category) => (
                   <ListItem
                     key={category.id.toString()}
@@ -111,7 +118,7 @@ const App: React.FC = () => {
               </List>
             </Paper>
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={9}>
             <Paper elevation={3} sx={{ p: 2 }}>
               <Typography variant="h6" gutterBottom>
                 Notes
@@ -159,7 +166,15 @@ const App: React.FC = () => {
                   <ListItem key={note.id.toString()}>
                     <ListItemText
                       primary={note.title}
-                      secondary={note.content || 'No content'}
+                      secondary={
+                        <React.Fragment>
+                          <Typography component="span" variant="body2" color="textPrimary">
+                            {categories.find(c => c.id === note.categoryId)?.name || 'Uncategorized'}
+                          </Typography>
+                          <br />
+                          {note.content || 'No content'}
+                        </React.Fragment>
+                      }
                     />
                   </ListItem>
                 ))}
