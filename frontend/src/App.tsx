@@ -121,7 +121,7 @@ const App: React.FC = () => {
           <Grid item xs={12} md={9}>
             <Paper elevation={3} sx={{ p: 2 }}>
               <Typography variant="h6" gutterBottom>
-                Notes
+                Msgs
               </Typography>
               <form onSubmit={handleSubmit(onAddNote)}>
                 <Controller
